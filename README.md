@@ -48,8 +48,8 @@ This PayPal React library consists of two main parts:
 1. Context Provider - this `<PayPalScriptProvider />` component manages loading the JS SDK script. Add it to the root of your React app. It uses the [Context API](https://reactjs.org/docs/context.html) for managing state and communicating to child components. It also supports reloading the script when parameters change.
 2. SDK Components - components like `<PayPalButtons />` are used to render the UI for PayPal products served by the JS SDK.
 
-```js
-// App.js
+```jsx
+// App.jsx
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 export default function App() {
@@ -67,6 +67,23 @@ The `<PayPalButtons />` component is fully documented in Storybook. Checkout the
 
 ### PayPalScriptProvider
 
+Use the PayPalScriptProvider `options` prop to configure the JS SDK. It accepts an object for passing query parameters and data attributes to the JS SDK script.
+
+```jsx
+const initialOptions = {
+    "client-id": "sb",
+    currency: "USD",
+    intent: "capture",
+    "data-client-token": "abc123xyz==",
+};
+
+<PayPalScriptProvider options={initialOptions}>
+    <PayPalButtons />
+</PayPalScriptProvider>;
+```
+
+The [JS SDK Configuration guide](https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-configuration/) contains the full list of query parameters and data attributes that can be used with the JS SDK.
+
 The `<PayPalScriptProvider />` component is designed to be used with the `usePayPalScriptReducer` hook for managing global state. This `usePayPalScriptReducer` hook has the same API as [React's useReducer hook](https://reactjs.org/docs/hooks-reference.html#usereducer).
 
 #### Tracking loading state
@@ -79,7 +96,7 @@ The `usePayPalScriptReducer` hook provides an easy way to tap into the loading s
 
 For example, here's how you can use it to show a loading spinner.
 
-```js
+```jsx
 const [{ isPending }] = usePayPalScriptReducer();
 
 return (
@@ -96,7 +113,7 @@ To learn more, check out the [loading spinner example in storybook](https://payp
 
 The `usePayPalScriptReducer` hook can be used to reload the JS SDK script when parameters like currency change. It provides the action `resetOptions` for reloading with new parameters. For example, here's how you can use it to change currency.
 
-```js
+```jsx
 const [{ scriptOptions }, dispatch] = usePayPalScriptReducer();
 const [currency, setCurrency] = useState(scriptOptions.currency);
 
